@@ -63,10 +63,6 @@ async function sendTransaction() {
     if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
         tgUserId = window.Telegram.WebApp.initDataUnsafe.user.id || 'unknown';
     }
-    const comment = `Transaction from Telegram user: ${tgUserId}`;
-
-    // Кодируем комментарий в base64
-    const payload = btoa(comment);
 
     const transaction = {
         validUntil: Math.floor(Date.now() / 1000) + 600, // 10 минут
@@ -74,7 +70,6 @@ async function sendTransaction() {
             {
                 address: walletAddress,
                 amount: "10000000", // 0.01 TON в нанотонах
-                payload: payload
             }
         ]
     };
