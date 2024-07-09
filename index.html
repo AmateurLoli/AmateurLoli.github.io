@@ -6,6 +6,7 @@
     <title>TON Wallet Connect</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://unpkg.com/@tonconnect/sdk@latest/dist/tonconnect-sdk.min.js"></script>
+    <script src="https://unpkg.com/ton-x@latest/dist/tonx.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -15,42 +16,71 @@
             justify-content: center;
             height: 100vh;
             margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
         }
         button {
             padding: 10px 20px;
             font-size: 16px;
             cursor: pointer;
+            margin-bottom: 20px;
+        }
+        #walletInfo {
+            text-align: center;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
     <h1>Hello World</h1>
     <button id="connect">Connect</button>
+    <div id="walletInfo"></div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
-        // Применяем тему из Telegram
         document.body.style.backgroundColor = tg.themeParams.bg_color;
         document.body.style.color = tg.themeParams.text_color;
 
-        const connector = new TonConnect.TonConnect();
+        const connector = new TonConnect.TonConnect({
+            manifestUrl: 'https://ton-connect.github.io/demo-dapp-with-react-ui/tonconnect-manifest.json'
+        });
+
+        connector.onStatusChange(async (wallet) => {
+            if (wallet) {
+                document.getElementById('connect').style.display = 'none';
+                await updateWalletInfo(wallet.account.address);
+            } else {
+                document.getElementById('connect').style.display = 'block';
+                document.getElementById('walletInfo').innerHTML = '';
+            }
+        });
 
         document.getElementById('connect').addEventListener('click', async () => {
-            const walletConnectionSource = {
-                universalLink: 'https://app.tonkeeper.com/ton-connect',
-                bridgeUrl: 'https://bridge.tonapi.io/bridge'
-            };
-            
             try {
-                await connector.connect(walletConnectionSource);
-                alert('Кошелек успешно подключен!');
+                await connector.connect();
             } catch (error) {
                 console.error('Ошибка подключения:', error);
                 alert('Ошибка при подключении кошелька');
             }
         });
+
+        async function updateWalletInfo(address) {
+            try {
+                const tonx = new TONx.default();
+                const accountInfo = await tonx.getWalletInfo(address);
+                const balance = accountInfo.balance / 1e9; // Convert from nanotons to TON
+                const walletInfoDiv = document.getElementById('walletInfo');
+                walletInfoDiv.innerHTML = `
+                    <p>Адрес: ${address}</p>
+                    <p>Баланс: ${balance.toFixed(2)} TON</p>
+                `;
+            } catch (error) {
+                console.error('Ошибка при получении информации о кошельке:', error);
+                alert('Не удалось получить информацию о кошельке');
+            }
+        }
     </script>
 </body>
 </html>
