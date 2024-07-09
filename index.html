@@ -35,7 +35,7 @@
         document.body.style.backgroundColor = tg.themeParams.bg_color;
         document.body.style.color = tg.themeParams.text_color;
 
-        const connector = new TonConnect();
+        const connector = new TonConnect.TonConnect();
 
         document.getElementById('connect').addEventListener('click', async () => {
             const walletConnectionSource = {
