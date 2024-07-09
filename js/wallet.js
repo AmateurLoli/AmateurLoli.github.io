@@ -6,10 +6,10 @@ function initWallet() {
     tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
         manifestUrl: 'https://amateurloli.github.io/tonconnect-manifest.json',
         twaReturnUrl: 'https://t.me/o5_ban',
-        buttonRootId: 'connect',
-        uiPreferences: {
-            theme: window.Telegram.WebApp.colorScheme
-        }
+        //buttonRootId: 'connect',
+        //uiPreferences: {
+        //    theme: window.Telegram.WebApp.colorScheme
+        //}
     });
 
     tonConnectUI.connectionRestored.then(restored => {
