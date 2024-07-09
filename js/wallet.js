@@ -71,7 +71,7 @@ async function sendTransaction() {
             {
                 address: walletAddress,
                 amount: "10000000", // 0.01 TON
-                payload: hash
+                //payload: hash
             }
         ]
     };
