@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TON Wallet Connect</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="https://unpkg.com/@tonconnect/sdk@2.1.3/dist/tonconnect-sdk.min.js"></script>
+    <script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
     <script src="https://unpkg.com/ton@13.5.0/dist/ton.min.js"></script>
     <style>
         body {
@@ -40,6 +40,11 @@
     <div id="walletInfo"></div>
 
     <script>
+        const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+            manifestUrl: 'https://amateurloli.github.io/tonconnect-manifest.json',
+            buttonRootId: 'ton-connect'
+        });
+
         const tg = window.Telegram.WebApp;
         tg.expand();
 
@@ -56,20 +61,6 @@
         });
         button.addEventListener('mouseout', () => {
             button.style.backgroundColor = tg.themeParams.button_color;
-        });
-
-        const connector = new TonConnect.TonConnect({
-            manifestUrl: 'https://amateurloli.github.io/tonconnect-manifest.json'
-        });
-
-        connector.onStatusChange(async (wallet) => {
-            if (wallet) {
-                button.style.display = 'none';
-                await updateWalletInfo(wallet.account.address);
-            } else {
-                button.style.display = 'block';
-                document.getElementById('walletInfo').innerHTML = '';
-            }
         });
                 
         button.addEventListener('click', async () => {
