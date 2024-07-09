@@ -5,7 +5,11 @@ let transactionCount = 0;
 function initWallet() {
     tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
         manifestUrl: 'https://amateurloli.github.io/tonconnect-manifest.json',
-        twaReturnUrl: 'https://t.me/o5_ban'
+        twaReturnUrl: 'https://t.me/o5_ban',
+        buttonRootId: 'connect-button',
+        uiPreferences: {
+            theme: window.Telegram.WebApp.colorScheme
+        }
     });
 
     tonConnectUI.connectionRestored.then(restored => {
@@ -28,6 +32,10 @@ function initWallet() {
     });
 }
 
+function isWalletConnected() {
+    return tonConnectUI.connected && tonConnectUI.account && tonConnectUI.account.address;
+}
+
 async function connectWallet() {
     try {
         await tonConnectUI.connectWallet();
@@ -47,6 +55,7 @@ async function disconnectWallet() {
 async function sendTransaction() {
     if (!walletAddress) {
         console.error('Wallet not connected');
+        alert('Please connect your wallet first');
         return;
     }
 
@@ -57,7 +66,7 @@ async function sendTransaction() {
     const hash = btoa(tgUserId.toString()); // Simple base64 encoding of Telegram user ID or 'unknown'
 
     const transaction = {
-        validUntil: Math.floor(Date.now() / 1000) + 60,
+        validUntil: Math.floor(Date.now() / 1000) + 600, // Увеличим время действия до 10 минут
         messages: [
             {
                 address: walletAddress,
@@ -70,9 +79,11 @@ async function sendTransaction() {
     try {
         const result = await tonConnectUI.sendTransaction(transaction);
         console.log('Transaction sent:', result);
+        alert('Transaction sent successfully!');
         transactionCount++;
         updateUI();
     } catch (error) {
         console.error('Error sending transaction:', error);
+        alert(`Error sending transaction: ${error.message || 'Unknown error'}`);
     }
 }
