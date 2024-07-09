@@ -42,6 +42,7 @@
 
         document.body.style.backgroundColor = tg.themeParams.bg_color;
         document.body.style.color = tg.themeParams.text_color;
+        document.connect.style.backgroundColor = tg.themeParams.active_button_color;
 
         const connector = new TonConnect.TonConnect({
             manifestUrl: 'https://ton-connect.github.io/demo-dapp-with-react-ui/tonconnect-manifest.json'
