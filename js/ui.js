@@ -7,8 +7,9 @@ function updateUI() {
     document.getElementById('closeModal').textContent = t('close');
 
     if (walletAddress) {
+        const shortAddress = `${walletAddress.slice(0, 4)}...${walletAddress.slice(-4)}`;
         document.getElementById('walletInfo').innerHTML = `
-            <p>${t('address')} ${walletAddress}</p>
+            <p>${t('address')} ${shortAddress}</p>
             <p>${t('balance')} <span id="balance">...</span> TON</p>
         `;
         document.getElementById('buyBtn').style.display = 'block';
@@ -24,11 +25,12 @@ function updateUI() {
 async function updateBalance() {
     if (walletAddress) {
         try {
-            const provider = new ton.TonClient({
-                endpoint: 'https://toncenter.com/api/v2/jsonRPC'
+            const provider = new TonWeb.HttpProvider('https://toncenter.com/api/v2/jsonRPC');
+            const wallet = new TonWeb.Wallets.all.v3R2(provider, {
+                address: walletAddress
             });
-            const balance = await provider.getBalance(walletAddress);
-            document.getElementById('balance').textContent = ton.fromNano(balance);
+            const balance = await wallet.methods.getBalance();
+            document.getElementById('balance').textContent = TonWeb.utils.fromNano(balance);
         } catch (error) {
             console.error('Error fetching balance:', error);
             document.getElementById('balance').textContent = 'Error';

@@ -50,8 +50,11 @@ async function sendTransaction() {
         return;
     }
 
-    const tgUserId = window.Telegram.WebApp.initDataUnsafe.user.id;
-    const hash = btoa(tgUserId.toString()); // Simple base64 encoding of Telegram user ID
+    let tgUserId = 'unknown';
+    if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+        tgUserId = window.Telegram.WebApp.initDataUnsafe.user.id || 'unknown';
+    }
+    const hash = btoa(tgUserId.toString()); // Simple base64 encoding of Telegram user ID or 'unknown'
 
     const transaction = {
         validUntil: Math.floor(Date.now() / 1000) + 60,
