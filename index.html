@@ -36,7 +36,7 @@
 </head>
 <body>
     <h1>Hello World</h1>
-    <div id="connect">Connect</div>
+    <button id="connect">Connect</button>
     <div id="walletInfo"></div>
 
     <script>
@@ -63,23 +63,7 @@
             button.style.backgroundColor = tg.themeParams.button_color;
         });
                 
-        button.addEventListener('click', async () => {
-            try {
-                async function connectToWallet() {
-                const connectedWallet = await tonConnectUI.connectWallet();
-                // Do something with connectedWallet if needed
-                console.log(connectedWallet);
-            }
 
-            // Call the function
-            connectToWallet().catch(error => {
-                console.error("Error connecting to wallet:", error);
-            });
-            } catch (error) {
-                console.error('Ошибка подключения:', error);
-                alert('Ошибка при подключении кошелька');
-            }
-        });
 
         async function updateWalletInfo(address) {
             try {
