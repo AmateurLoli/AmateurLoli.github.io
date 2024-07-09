@@ -65,19 +65,16 @@ async function sendTransaction() {
     }
     const comment = `Transaction from Telegram user: ${tgUserId}`;
 
-    // Создаем payload с комментарием
-    const body = ton.beginCell()
-        .storeUint(0, 32) // пишем 32 нулевых бита, чтобы указать, что далее следует текстовый комментарий
-        .storeStringTail(comment) // записываем наш текстовый комментарий
-        .endCell();
+    // Кодируем комментарий в base64
+    const payload = btoa(comment);
 
     const transaction = {
         validUntil: Math.floor(Date.now() / 1000) + 600, // 10 минут
         messages: [
             {
                 address: walletAddress,
-                amount: ton.toNano('0.01').toString(), // 0.01 TON
-                payload: body.toBoc().toString('base64') // payload с комментарием
+                amount: "10000000", // 0.01 TON в нанотонах
+                payload: payload
             }
         ]
     };
